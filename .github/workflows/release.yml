@@ -1,0 +1,53 @@
+# Name of the workflow.
+name: Build binaries on release
+
+# Run this workflow when a new release is created.
+on:
+  release:
+    types:
+      - created
+
+# The jobs to run
+jobs:
+
+  # A job for building and uploading the binaries
+  build_and_upload:
+    name: Build and upload binaries
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Setup NASM
+        uses: ilammy/setup-nasm@v1
+
+      - name: Setup Dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "6.0.x"
+
+      - name: Set the release tag as the version variable
+        id: tag_name
+        run: echo ::set-output name=RELEASE_TAG::${GITHUB_REF#refs/tags/}
+
+      - name: Create a copy of the original client
+        run: cp "./bin/ps0032-8-12-2021-game.exe" "./bin/game.exe"
+        
+      - name: Prepare the debug client
+        run: dotnet run --input="./bin/game.exe" --output="./bin/debug-${{ steps.tag_name.outputs.RELEASE_TAG }}.exe" --profile="DEBUG"
+
+      - name: Build the debug client
+        run: nasm -o ./bin/game-debug-${{ steps.tag_name.outputs.RELEASE_TAG }}.exe src/client.asm
+
+      - name: Prepare the release client
+        run: dotnet run --input="./bin/game.exe" --output="./bin/release-${{ steps.tag_name.outputs.RELEASE_TAG }}.exe" --profile="RELEASE"
+
+      - name: Build the release client
+        run: nasm -o ./bin/game-release-${{ steps.tag_name.outputs.RELEASE_TAG }}.exe src/client.asm
+
+      - name: Upload the binaries
+        uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: "./bin/game-*"

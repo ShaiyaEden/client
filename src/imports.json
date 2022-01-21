@@ -1,0 +1,8 @@
+[
+    {
+        "module": "user32.dll",
+        "functions": [
+            "FlashWindow"
+        ]
+    }
+]

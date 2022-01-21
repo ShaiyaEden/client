@@ -1,0 +1,12 @@
+// This is a "script" file for ResourceHacker. This is used for replacing the icons used in the Shaiya game client.
+[FILENAMES]
+Exe=	bin/game.exe
+SaveAs=	bin/game.exe
+Log=	bin/game.log
+
+[COMMANDS]
+// Delete the old icons
+-delete ICONGROUP,,
+
+// Add the new icons
+-add res/icon.ico, ICONGROUP, MAINICON
