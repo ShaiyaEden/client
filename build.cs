@@ -90,7 +90,9 @@ void BuildMetadata(PeFile pe, Options opt)
     
     // Collect all the patches.
     var patches = Directory.EnumerateFiles("src/patches", "*.asm", SearchOption.AllDirectories)
-        .Select(p => p.Replace(Path.DirectorySeparatorChar, '/'));
+        .Select(p => p.Replace(Path.DirectorySeparatorChar, '/'))
+        .ToList();
+    patches.Sort();
     // Collect all of the definitions.
     var defs = Directory.EnumerateFiles("src/defs", "*.asm", SearchOption.AllDirectories)
         .Select(p => p.Replace(Path.DirectorySeparatorChar, '/'));
@@ -117,9 +119,10 @@ void BuildMetadata(PeFile pe, Options opt)
     bldr.Append("goto_sect .text\n");
     foreach (var patch in patches)
     {
+        Console.WriteLine(patch);
         bldr.Append($"%include \"{patch}\"\n");
     }
-    
+
     // Include all of the custom code
     bldr.Append($"goto_sect {opt.SectionName}\n");
     foreach (var custom in eden)
