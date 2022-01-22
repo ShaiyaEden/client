@@ -19,12 +19,11 @@ PacketLogger__RecvName:
 
 ; The send identifier
 PacketLogger__SendName:
-    db "SEND<<", 0
+    db "SEND>>", 0
 
 ; The mode to open the logger in.
 PacketLog__FileOpenMode:
     db "w", 0
-
 
 ; Initialise the log file.
 PacketLogger__Init:
