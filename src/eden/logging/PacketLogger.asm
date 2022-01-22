@@ -6,6 +6,8 @@ PacketLogger__Length        equ 0x8DA2C0
 PacketLogger__Payload       equ 0x8DA2C2
 PacketLogger__Log           equ 0x693280
 
+%ifdef BUILD_DEBUG  ; Only include packet logging code if the client is built in debug
+
 PacketLogger__FileName:
     db "Packets.txt", 0
 
@@ -69,3 +71,5 @@ PacketLogger__Recv:
     mov ebp, esp
     sub esp, 0x24
     jmp PacketLogger__RecvRetn
+
+%endif

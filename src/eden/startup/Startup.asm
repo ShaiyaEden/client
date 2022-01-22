@@ -5,9 +5,11 @@ Startup__PreWindowCreate:
     ; Format our new window title
     call WindowTitle__InitWindowTitle
 
-    ; Initialise the packet logger
-    call PacketLogger__Init
-
+    %ifdef BUILD_DEBUG
+        ; Initialise the packet logger
+        call PacketLogger__Init
+    %endif
+    
     ; Proceed to creating the window.
     sub esp, 0x38
     push esi
