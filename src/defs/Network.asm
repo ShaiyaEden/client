@@ -1,0 +1,3 @@
+u32_GameEncryptionMode  equ 0x8E2748
+u8_ShouldDecryptPackets equ 0x8E274C
+u8_ShouldEncryptPackets equ 0x8E274D
